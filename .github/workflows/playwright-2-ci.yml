@@ -11,11 +11,6 @@ jobs:
     name: Run Playwright E2E Tests
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium, firefox, webkit]
-
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -32,32 +27,32 @@ jobs:
       - name: 🌐 Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: 🧪 Run Playwright E2E tests
-        run: npm run test:e2e -- --project=${{ matrix.browser }}
+      - name: 🧪 Run Playwright E2E tests (all browsers)
+        run: npm run test:e2e
 
-      # --- Gestion des artifacts pour éviter écrasement ---
-      - name: 📸 Prepare screenshots artifact
-        if: failure() && steps.run_playwright_tests.outcome == 'failure'
+      # --- Préparer les artifacts ---
+      - name: 📸 Prepare Screenshots
+        if: failure()
         run: |
           if [ -d screenshots ]; then
-            mkdir -p screenshots-${{ matrix.browser }}
-            cp -r screenshots/* screenshots-${{ matrix.browser }}/
+            mkdir -p screenshots-artifact
+            cp -r screenshots/* screenshots-artifact/
           fi
 
-      - name: 📊 Prepare HTML report artifact
+      - name: 📊 Prepare HTML Report
         if: always()
         run: |
           if [ -d playwright-report ]; then
-            mkdir -p playwright-report-${{ matrix.browser }}
-            cp -r playwright-report/* playwright-report-${{ matrix.browser }}/
+            mkdir -p playwright-report-artifact
+            cp -r playwright-report/* playwright-report-artifact/
           fi
 
-      - name: 🔍 Prepare traces artifact
-        if: failure() && steps.run_playwright_tests.outcome == 'failure'
+      - name: 🔍 Prepare Traces
+        if: failure()
         run: |
           if [ -d test-results ]; then
-            mkdir -p test-results-${{ matrix.browser }}
-            cp -r test-results/* test-results-${{ matrix.browser }}/
+            mkdir -p test-results-artifact
+            cp -r test-results/* test-results-artifact/
           fi
 
       # --- Upload artifacts ---
@@ -65,24 +60,24 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: screenshots-${{ matrix.browser }}-${{ github.run_number }}
-          path: screenshots-${{ matrix.browser }}/
+          name: screenshots-${{ github.run_number }}
+          path: screenshots-artifact/
           retention-days: 30
 
       - name: 📊 Upload Playwright HTML Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.browser }}-${{ github.run_number }}
-          path: playwright-report-${{ matrix.browser }}/
+          name: playwright-report-${{ github.run_number }}
+          path: playwright-report-artifact/
           retention-days: 30
 
       - name: 🔍 Upload Playwright Traces
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-traces-${{ matrix.browser }}-${{ github.run_number }}
-          path: test-results-${{ matrix.browser }}/
+          name: playwright-traces-${{ github.run_number }}
+          path: test-results-artifact/
           retention-days: 30
 
   test-summary:
@@ -105,4 +100,3 @@ jobs:
           echo "- Playwright HTML reports" >> $GITHUB_STEP_SUMMARY
           echo "- Screenshots (on failure)" >> $GITHUB_STEP_SUMMARY
           echo "- Traces (on failure)" >> $GITHUB_STEP_SUMMARY
-
