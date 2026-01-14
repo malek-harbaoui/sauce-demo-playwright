@@ -9,7 +9,6 @@ saucedemo-playwright-tests/
 ├── tests/
 │   ├── helpers/
 │   │   └── testHelpers.js       # Fonctions réutilisables
-│   ├── micro-tests.spec.js      # Tests unitaires de chaque fonction
 │   └── e2e-purchase.spec.js     # Test end-to-end complet
 ├── testData.json                # Données de test
 ├── playwright.config.js         # Configuration Playwright
@@ -36,22 +35,6 @@ mkdir screenshots
 > Le dossier screenshots sera créé automatiquement lors du premier échec de test
 
 ## 🧩 Fonctionnalités
-
-### Micro Tests (tests/micro-tests.spec.js)
-12 tests indépendants qui peuvent être exécutés séparément :
-- **MT01** : Connexion utilisateur
-- **MT02** : Vérification d'un produit
-- **MT03** : Vérification de tous les produits
-- **MT04** : Ajout d'un produit au panier
-- **MT05** : Navigation vers le panier
-- **MT06** : Vérification du produit dans le panier
-- **MT07** : Navigation vers checkout
-- **MT08** : Remplissage du formulaire de checkout
-- **MT09** : Vérification du récapitulatif de commande
-- **MT10** : Finalisation de la commande
-- **MT11** : Vérification du message de confirmation
-- **MT12** : Vérification disparition du badge panier
-
 ### Test E2E (tests/e2e-purchase.spec.js)
 Un test complet qui couvre tout le parcours d'achat :
 1. Connexion avec l'utilisateur standard
@@ -72,10 +55,6 @@ Un test complet qui couvre tout le parcours d'achat :
 npm test
 ```
 
-### Exécuter uniquement les micro tests
-```bash
-npm run test:micro
-```
 
 ### Exécuter uniquement le test E2E
 ```bash
