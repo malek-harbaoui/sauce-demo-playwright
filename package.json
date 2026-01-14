@@ -4,7 +4,6 @@
   "description": "Tests automatisés pour SauceDemo avec Playwright",
   "scripts": {
     "test": "playwright test",
-    "test:micro": "playwright test tests/micro-tests.spec.js",
     "test:e2e": "playwright test tests/e2e-purchase.spec.js",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
